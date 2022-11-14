@@ -37,6 +37,16 @@ class ChampionshipBuilder(id: String, name: String, date: LocalDate, division: L
     return this
   }
 
+  fun withEvents(vararg events: Event): ChampionshipBuilder {
+    return withEvents(events.toList())
+  }
+
+  fun withEvents(
+    events: List<Event> = listOf(anEvent(), anEvent(), anEvent())
+  ): ChampionshipBuilder {
+    championship = Championship.registeredEvents.set(championship, events)
+    return this
+  }
 
   fun created(): Championship {
     return championship

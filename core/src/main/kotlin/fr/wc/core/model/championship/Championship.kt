@@ -6,6 +6,7 @@ import arrow.core.Some
 import arrow.optics.optics
 import fr.wc.core.model.Athlete
 import fr.wc.core.model.Division
+import fr.wc.core.model.Event
 import java.time.LocalDate
 
 enum class ChampionshipStatus {
@@ -39,6 +40,7 @@ data class Championship(
     val info: ChampionshipInfo,
     val status: ChampionshipStatus,
     val registeredAthletes: RegisteredAthletes,
+    val registeredEvents: List<Event>,
 ) {
     companion object {
         fun createdChampionship(id: String, name: String, date: LocalDate, divisions: List<Division>) =
@@ -46,7 +48,8 @@ data class Championship(
                 id = ChampionshipId(id),
                 info = ChampionshipInfo(name, date, divisions),
                 status = ChampionshipStatus.Created,
-                registeredAthletes = RegisteredAthletes()
+                registeredAthletes = RegisteredAthletes(),
+                registeredEvents = listOf(),
             )
     }
 }
