@@ -1,6 +1,7 @@
 plugins {
     id("fr.wc.kotlin-library-conventions")
     `java-test-fixtures`
+    alias(libs.plugins.ksp)
 }
 
 dependencies {
@@ -12,4 +13,12 @@ dependencies {
 
     testFixturesImplementation(libs.bundles.arrowkt)
     testFixturesImplementation(libs.faker)
+
+    ksp(libs.arrowkt.ksp)
+}
+
+kotlin {
+    sourceSets.main {
+        kotlin.srcDir("build/generated/ksp/main/kotlin")
+    }
 }

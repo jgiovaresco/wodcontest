@@ -5,6 +5,7 @@ strikt = "0.34.1"
 
 [libraries]
 arrowkt-bom = { group = "io.arrow-kt", name = "arrow-stack", version.ref = "arrowkt" }
+arrowkt-ksp = { group = "io.arrow-kt", name = "arrow-optics-ksp-plugin", version.ref = "arrowkt" }
 arrowkt-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrowkt" }
 arrowkt-optics = { group = "io.arrow-kt", name = "arrow-optics", version.ref = "arrowkt" }
 faker = { group = "io.github.serpro69", name = "kotlin-faker", version = "1.11.0" }
@@ -20,3 +21,4 @@ kotest = ["kotest-api-jvm", "kotest-dataset", "kotest-junit5"]
 strikt = ["strikt-arrow", "strikt-core"]
 
 [plugins]
+ksp = { id = "com.google.devtools.ksp", version = "1.7.20-1.0.8" }
