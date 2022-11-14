@@ -4,9 +4,7 @@ import arrow.core.None
 import arrow.core.Option
 import arrow.core.Some
 import arrow.optics.optics
-import fr.wc.core.model.Athlete
-import fr.wc.core.model.Division
-import fr.wc.core.model.Event
+import fr.wc.core.model.*
 import java.time.LocalDate
 
 enum class ChampionshipStatus {
@@ -31,8 +29,16 @@ data class ChampionshipInfo(val name: String, val date: LocalDate, val divisions
 @optics
 data class RegisteredAthletes(val registrations: List<Pair<Division, Athlete>> = listOf()) {
     companion object
+
     fun athletesFrom(division: Division): List<Athlete> =
         registrations.filter { it.first == division }.map { it.second }
+
+    fun contains(id: AthleteId) = registrations.any { it.second.id == id }
+}
+
+@optics
+data class EventScore(val eventId: EventId, val athleteId: AthleteId, val score: Score) {
+    companion object
 }
 
 @optics
@@ -42,6 +48,7 @@ data class Championship(
     val status: ChampionshipStatus,
     val registeredAthletes: RegisteredAthletes,
     val registeredEvents: List<Event>,
+    val scores: List<EventScore>,
 ) {
     companion object {
         fun createdChampionship(id: String, name: String, date: LocalDate, divisions: List<Division>) =
@@ -51,6 +58,7 @@ data class Championship(
                 status = ChampionshipStatus.Created,
                 registeredAthletes = RegisteredAthletes(),
                 registeredEvents = listOf(),
+                scores = listOf(),
             )
     }
 

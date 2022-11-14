@@ -1,11 +1,12 @@
 package fr.wc.core.error
 
-import fr.wc.core.model.Athlete
-import fr.wc.core.model.Division
+import fr.wc.core.model.*
 import fr.wc.core.model.championship.ChampionshipId
 
 sealed class ApplicationError {
     data class ChampionshipNotFound(val id: ChampionshipId) : ApplicationError()
+    data class EventNotFound(val id: EventId) : ApplicationError()
+    data class AthleteNotFound(val id: AthleteId) : ApplicationError()
 
     // CreateChampionshipError
     object EmptyChampionshipName : ApplicationError()
@@ -19,4 +20,7 @@ sealed class ApplicationError {
     // Starting
     object NotEnoughAthlete : ApplicationError()
     object NoEvent : ApplicationError()
+
+    // RegisterScoreError
+    data class IncorrectScoreType(val event: Event, val score: Score) : ApplicationError()
 }

@@ -1,10 +1,7 @@
 package fr.wc.core.model
 
 import fr.wc.core.model.championship.ChampionshipId
-import fr.wc.core.model.command.CreateChampionshipCommand
-import fr.wc.core.model.command.RegisterAthleteCommand
-import fr.wc.core.model.command.RegisterEventCommand
-import fr.wc.core.model.command.StartChampionshipCommand
+import fr.wc.core.model.command.*
 import fr.wc.utils.TimeProvider
 import java.time.LocalDate
 
@@ -35,3 +32,10 @@ fun aRegisterEventCommand(
 fun aStartChampionshipCommand(
     championshipId: ChampionshipId = ChampionshipId(faker.random.nextUUID()),
 ): StartChampionshipCommand = StartChampionshipCommand(championshipId)
+
+fun aRegisterScoreCommand(
+    championshipId: ChampionshipId = ChampionshipId(faker.random.nextUUID()),
+    eventId: EventId = EventId(faker.random.nextUUID()),
+    athleteId: AthleteId = AthleteId(faker.random.nextUUID()),
+    score: Score = aTimeScore(),
+) = RegisterScoreCommand(championshipId, eventId, athleteId, score)

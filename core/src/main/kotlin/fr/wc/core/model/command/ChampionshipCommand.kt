@@ -1,8 +1,6 @@
 package fr.wc.core.model.command
 
-import fr.wc.core.model.Athlete
-import fr.wc.core.model.Division
-import fr.wc.core.model.ScoreType
+import fr.wc.core.model.*
 import fr.wc.core.model.championship.ChampionshipId
 import java.time.LocalDate
 
@@ -29,4 +27,11 @@ data class RegisterEventCommand(
 
 data class StartChampionshipCommand(
     val championshipId: ChampionshipId,
+) : ChampionshipCommand()
+
+data class RegisterScoreCommand(
+    val championshipId: ChampionshipId,
+    val eventId: EventId,
+    val athleteId: AthleteId,
+    val score: Score
 ) : ChampionshipCommand()
