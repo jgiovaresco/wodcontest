@@ -4,6 +4,7 @@ import fr.wc.core.model.championship.ChampionshipId
 import fr.wc.core.model.command.CreateChampionshipCommand
 import fr.wc.core.model.command.RegisterAthleteCommand
 import fr.wc.core.model.command.RegisterEventCommand
+import fr.wc.core.model.command.StartChampionshipCommand
 import fr.wc.utils.TimeProvider
 import java.time.LocalDate
 
@@ -30,3 +31,7 @@ fun aRegisterEventCommand(
     description: String = "description of $name",
     scoreType: ScoreType = faker.random.nextEnum()
 ): RegisterEventCommand = RegisterEventCommand(championshipId, name, description, scoreType)
+
+fun aStartChampionshipCommand(
+    championshipId: ChampionshipId = ChampionshipId(faker.random.nextUUID()),
+): StartChampionshipCommand = StartChampionshipCommand(championshipId)

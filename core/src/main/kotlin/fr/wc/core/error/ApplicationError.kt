@@ -16,4 +16,7 @@ sealed class ApplicationError {
     data class UnavailableDivision(val division: Division) : ApplicationError()
     data class IncorrectDivision(val division: Division, val athlete: Athlete) : ApplicationError()
 
+    // Starting
+    object NotEnoughAthlete : ApplicationError()
+    object NoEvent : ApplicationError()
 }

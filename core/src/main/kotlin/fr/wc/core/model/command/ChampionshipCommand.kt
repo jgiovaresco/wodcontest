@@ -26,3 +26,7 @@ data class RegisterEventCommand(
     val description: String,
     val scoreType: ScoreType,
 ) : ChampionshipCommand()
+
+data class StartChampionshipCommand(
+    val championshipId: ChampionshipId,
+) : ChampionshipCommand()

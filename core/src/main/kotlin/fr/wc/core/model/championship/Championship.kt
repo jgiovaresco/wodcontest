@@ -11,6 +11,7 @@ import java.time.LocalDate
 
 enum class ChampionshipStatus {
     Created,
+    Started,
 }
 
 @optics
@@ -52,4 +53,7 @@ data class Championship(
                 registeredEvents = listOf(),
             )
     }
+
+    fun allDivisionsHaveEnoughAthlete() =
+        info.divisions.all { (registeredAthletes.athletesFrom(it).size >= 2) }
 }

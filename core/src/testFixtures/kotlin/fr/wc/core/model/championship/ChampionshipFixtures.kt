@@ -51,4 +51,8 @@ class ChampionshipBuilder(id: String, name: String, date: LocalDate, division: L
   fun created(): Championship {
     return championship
   }
+
+  fun started(): Championship {
+    return Championship.status.set(championship, ChampionshipStatus.Started)
+  }
 }
