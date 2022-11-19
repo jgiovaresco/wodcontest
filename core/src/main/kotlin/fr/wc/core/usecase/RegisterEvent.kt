@@ -13,14 +13,14 @@ import fr.wc.utils.IdGenerator
 class RegisterEvent(private val championshipRepository: ChampionshipRepository) :
   UseCase<RegisterEventCommand, Championship> {
   override suspend fun execute(
-    command: RegisterEventCommand,
+      input: RegisterEventCommand,
   ): Either<ApplicationError, Championship> {
     // TODO handle other type of Championship
-    val championship = championshipRepository.get(command.championshipId)
+      val championship = championshipRepository.get(input.championshipId)
 
     return when (championship) {
-      is Some -> registerEvent(championship.value, command).right()
-      is None -> ApplicationError.ChampionshipNotFound(command.championshipId).left()
+        is Some -> registerEvent(championship.value, input).right()
+        is None -> ApplicationError.ChampionshipNotFound(input.championshipId).left()
     }.flatMap { championshipRepository.save(it) }
   }
 

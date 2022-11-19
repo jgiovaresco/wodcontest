@@ -13,14 +13,14 @@ import fr.wc.core.repository.ChampionshipRepository
 class RegisterAthlete(private val championshipRepository: ChampionshipRepository) :
     UseCase<RegisterAthleteCommand, Championship> {
     override suspend fun execute(
-        command: RegisterAthleteCommand,
+        input: RegisterAthleteCommand,
     ): Either<ApplicationError, Championship> {
         // TODO handle other type of Championship
-        val championship = championshipRepository.get(command.championshipId)
+        val championship = championshipRepository.get(input.championshipId)
 
         return when (championship) {
-            is Some -> registerAthlete(championship.value, command)
-            is None -> Either.Left(ApplicationError.ChampionshipNotFound(command.championshipId))
+            is Some -> registerAthlete(championship.value, input)
+            is None -> Either.Left(ApplicationError.ChampionshipNotFound(input.championshipId))
         }.flatMap { championshipRepository.save(it) }
     }
 

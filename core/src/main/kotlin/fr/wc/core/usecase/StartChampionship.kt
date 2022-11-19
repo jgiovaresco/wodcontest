@@ -11,14 +11,14 @@ import fr.wc.inmemory.repository.InMemoryChampionshipRepository
 class StartChampionship(private val championshipRepository: InMemoryChampionshipRepository) :
     UseCase<StartChampionshipCommand, Championship> {
     override suspend fun execute(
-        command: StartChampionshipCommand
+        input: StartChampionshipCommand
     ): Either<ApplicationError, Championship> {
         // TODO handle other type of Championship
-        val championship = championshipRepository.get(command.championshipId)
+        val championship = championshipRepository.get(input.championshipId)
 
         return when (championship) {
             is Some -> start(championship.value)
-            is None -> ApplicationError.ChampionshipNotFound(command.championshipId).left()
+            is None -> ApplicationError.ChampionshipNotFound(input.championshipId).left()
         }.flatMap { championshipRepository.save(it) }
     }
 

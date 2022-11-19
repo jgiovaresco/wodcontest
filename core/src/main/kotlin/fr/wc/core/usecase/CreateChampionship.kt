@@ -12,15 +12,15 @@ import fr.wc.utils.TimeProvider
 class CreateChampionship(private val championshipRepository: ChampionshipRepository) :
     UseCase<CreateChampionshipCommand, Championship> {
     override suspend fun execute(
-        command: CreateChampionshipCommand,
+        input: CreateChampionshipCommand,
     ): Either<ApplicationError, Championship> {
-        return this.validate(command)
+        return this.validate(input)
             .map {
                 Championship.createdChampionship(
                     IdGenerator.generate(),
-                    command.name,
-                    command.date,
-                    command.divisions
+                    input.name,
+                    input.date,
+                    input.divisions
                 )
             }
             .flatMap { championshipRepository.save(it) }

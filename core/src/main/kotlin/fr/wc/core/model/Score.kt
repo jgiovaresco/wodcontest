@@ -1,5 +1,10 @@
+// Until https://github.com/arrow-kt/arrow/pull/2850 | https://github.com/arrow-kt/arrow/issues/2803 available
+@file:JvmName("ScoreJvm")
+
 package fr.wc.core.model
 
+import arrow.optics.Iso
+import arrow.optics.optics
 import java.util.*
 
 enum class ScoreType(val unit: ScoreUnit, val order: ScoreOrdering) {
@@ -19,7 +24,23 @@ enum class ScoreOrdering {
     Desc
 }
 
+typealias ScorePair = Pair<ScoreType, UInt>
+
+@optics
 sealed class Score(val type: ScoreType, val value: UInt) : Comparable<Score> {
+    companion object {
+        val iso: Iso<Score, ScorePair> = Iso(
+            get = { Pair(it.type, it.value) },
+            reverseGet = {
+                when (it.first) {
+                    ScoreType.Weight -> WeightScore(it.second)
+                    ScoreType.Time -> TimeScore(it.second)
+                    ScoreType.Reps -> RepScore(it.second)
+                }
+            }
+        )
+    }
+
     override operator fun compareTo(other: Score): Int =
         if (type.order == ScoreOrdering.Desc) {
             -value.compareTo(other.value)
@@ -32,6 +53,9 @@ sealed class Score(val type: ScoreType, val value: UInt) : Comparable<Score> {
 
     override fun hashCode(): Int = Objects.hash(type, value)
 }
+
+fun Score.toScorePair() = Score.iso.get(this)
+fun ScorePair.toScore() = Score.iso.reverseGet(this)
 
 data class TimeScore(val valueInSeconds: UInt) : Score(ScoreType.Time, valueInSeconds)
 
