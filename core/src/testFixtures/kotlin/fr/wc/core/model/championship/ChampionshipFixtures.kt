@@ -48,6 +48,15 @@ class ChampionshipBuilder(id: String, name: String, date: LocalDate, division: L
     return this
   }
 
+  fun withScores(vararg scores: EventScore): ChampionshipBuilder {
+    return withScores(scores.toList())
+  }
+
+  fun withScores(scores: List<EventScore> = listOf()): ChampionshipBuilder {
+    championship = Championship.scores.set(championship, scores)
+    return this
+  }
+
   fun created(): Championship {
     return championship
   }
