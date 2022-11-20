@@ -1,5 +1,6 @@
 package fr.wc.core.model.leaderboard
 
+import arrow.core.Tuple4
 import arrow.core.Tuple5
 import arrow.optics.Iso
 import arrow.optics.optics
@@ -9,7 +10,20 @@ import fr.wc.utils.last
 
 
 typealias RankTuple = Tuple5<AthleteId, Score, UInt, Boolean, UInt>
+typealias OverallRankTuple = Tuple4<AthleteId, UInt, UInt, Boolean>
 typealias EventLeaderboardPair = Pair<EventId, List<RankTuple>>
+
+@optics
+data class OverallRank(val athleteId: AthleteId, val position: UInt, val points: UInt, val tie: Boolean = false) {
+    companion object {
+        val tupleIso: Iso<OverallRank, OverallRankTuple> = Iso(
+            get = { Tuple4(it.athleteId, it.position, it.points, it.tie) },
+            reverseGet = { OverallRank(it.first, it.second, it.third, it.fourth) }
+        )
+    }
+}
+
+fun OverallRank.toOverallRankTuple() = OverallRank.tupleIso.get(this)
 
 @optics
 data class Rank(val athleteId: AthleteId, val score: Score, val position: UInt, val tie: Boolean = false) {
@@ -41,6 +55,11 @@ data class EventLeaderboard(val eventId: EventId, val ranking: List<Rank>) {
 
 fun EventLeaderboard.toEventLeaderboardPair() = EventLeaderboard.pairIso.get(this)
 
+@optics
+data class OverallLeaderboard(val ranking: List<OverallRank>, val eventsRanking: List<EventLeaderboard>) {
+    companion object
+}
+
 fun rankAthletes(
     scores: List<EventScore>,
 ): List<Rank> {
@@ -55,18 +74,8 @@ fun rankAthletes(
         )
 
         if (lastRank.score == score.score) {
-            lastRank = Rank(
-                lastRank.athleteId,
-                lastRank.score,
-                lastRank.position,
-                true
-            )
-            currentRank = Rank(
-                score.athleteId,
-                score.score,
-                lastRank.position,
-                true
-            )
+            lastRank = Rank.tie.modify(lastRank) { true }
+            currentRank = Rank.athleteId.modify(lastRank) { score.athleteId }
         }
 
         return@fold mutableListOf(* ranks.slice(0 until ranks.size - 1).toTypedArray(), lastRank, currentRank)
