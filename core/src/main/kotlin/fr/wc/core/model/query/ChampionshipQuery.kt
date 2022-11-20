@@ -9,3 +9,7 @@ data class GetEventLeaderboardQuery(
     override val championshipId: ChampionshipId,
     val eventId: EventId
 ) : ChampionshipQuery(championshipId)
+
+data class GetOverallLeaderboardQuery(
+    override val championshipId: ChampionshipId,
+) : ChampionshipQuery(championshipId)
