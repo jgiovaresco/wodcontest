@@ -69,3 +69,11 @@ fun Championship.registerAthlete(division: Division, athlete: Athlete) =
         list.add(Pair(division, athlete))
         list
     }
+
+fun Championship.registerNewEvent(newEvent: Event) =
+    Championship.registeredEvents.modify(this) {
+        val list = mutableListOf<Event>()
+        list.addAll(it)
+        list.add(newEvent)
+        list
+    }

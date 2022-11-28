@@ -1,6 +1,9 @@
 package fr.wc.core.usecase
 
+import arrow.core.nonEmptyListOf
+import fr.wc.core.InvalidName
 import fr.wc.core.error.ChampionshipNotFound
+import fr.wc.core.error.IncorrectInput
 import fr.wc.core.model.Event
 import fr.wc.core.model.aRegisterEventCommand
 import fr.wc.core.model.championship.ChampionshipBuilder.Builder.aChampionship
@@ -43,6 +46,20 @@ class RegisterEventTest :
         expectThat(found).isRight().with({ value }) {
           get { registeredEvents }.map(Event::name).containsExactly(command.name)
         }
+      }
+
+      context("prevent from registering an invalid event") {
+        val command = aRegisterEventCommand(championshipId = championship.id, name = "")
+
+        val result = usecase.execute(command)
+
+        result.fold(
+          { r ->
+            expectThat(r).isA<IncorrectInput>().get { errors }
+              .contains(InvalidName(nonEmptyListOf("Cannot be blank")))
+          },
+          { fail("error expected") }
+        )
       }
     }
 
