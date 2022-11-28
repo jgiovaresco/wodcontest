@@ -18,8 +18,9 @@ data class AthleteNotFound(val id: AthleteId) : ApplicationError
 data class AlreadyExistingChampionship(val name: String) : ApplicationError
 
 // Starting
-object NotEnoughAthlete : ApplicationError
-object NoEvent : ApplicationError
+sealed interface ChampionshipStartError : ApplicationError
+object NotEnoughAthlete : ChampionshipStartError
+object NoEvent : ChampionshipStartError
 
 // RegisterScoreError
 data class IncorrectScoreType(val event: Event, val score: Score) : ApplicationError

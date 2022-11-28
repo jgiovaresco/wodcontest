@@ -3,7 +3,12 @@
 
 package fr.wc.core.model
 
+import arrow.core.*
+import arrow.core.continuations.either
 import arrow.optics.optics
+import fr.wc.core.error.ChampionshipStartError
+import fr.wc.core.error.NoEvent
+import fr.wc.core.error.NotEnoughAthlete
 import fr.wc.core.model.*
 import java.time.LocalDate
 
@@ -57,9 +62,6 @@ data class Championship(
                 scores = listOf(),
             )
     }
-
-    fun allDivisionsHaveEnoughAthlete() =
-        info.divisions.all { (registeredAthletes.athletesFrom(it).size >= 2) }
 }
 
 fun Championship.registerAthlete(division: Division, athlete: Athlete) =
@@ -77,3 +79,15 @@ fun Championship.registerNewEvent(newEvent: Event) =
         list.add(newEvent)
         list
     }
+
+fun Championship.readyToStart(): Validated<ChampionshipStartError, Championship> =
+    when {
+        info.divisions.any { (registeredAthletes.athletesFrom(it).size < 2) } -> NotEnoughAthlete.invalid()
+        registeredEvents.isEmpty() -> NoEvent.invalid()
+        else -> this.valid()
+    }
+
+fun Championship.start(): Either<ChampionshipStartError, Championship> = either.eager {
+    val championship = readyToStart().bind()
+    Championship.status.set(championship, ChampionshipStatus.Started)
+}
