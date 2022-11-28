@@ -1,9 +1,11 @@
 package fr.wc.core.usecase
 
 import arrow.core.flatMap
+import arrow.core.nonEmptyListOf
+import fr.wc.core.InvalidDate
+import fr.wc.core.InvalidName
 import fr.wc.core.error.AlreadyExistingChampionship
-import fr.wc.core.error.EmptyChampionshipName
-import fr.wc.core.error.ScheduledInPastChampionship
+import fr.wc.core.error.IncorrectInput
 import fr.wc.core.model.aCreateChampionshipCommand
 import fr.wc.core.model.championship.ChampionshipStatus
 import fr.wc.inmemory.repository.InMemoryChampionshipRepository
@@ -59,13 +61,16 @@ class CreateChampionshipTest :
             )
         }
 
-        should("return an error when creating a championship with an empty name") {
+        should("not create a championship with an empty name") {
             val command = aCreateChampionshipCommand(name = "")
 
             val result = usecase.execute(command)
 
             result.fold(
-                { r -> expectThat(r).isA<EmptyChampionshipName>() },
+                { r ->
+                    expectThat(r).isA<IncorrectInput>().get { errors }
+                        .contains(InvalidName(nonEmptyListOf("Cannot be blank")))
+                },
                 { fail("error expected") }
             )
         }
@@ -77,7 +82,10 @@ class CreateChampionshipTest :
             val result = usecase.execute(command)
 
             result.fold(
-                { r -> expectThat(r).isA<ScheduledInPastChampionship>() },
+                { r ->
+                    expectThat(r).isA<IncorrectInput>().get { errors }
+                        .contains(InvalidDate(nonEmptyListOf("Cannot be scheduled in the past")))
+                },
                 { fail("error expected") }
             )
         }

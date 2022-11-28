@@ -1,45 +1,42 @@
 package fr.wc.core.usecase
 
 import arrow.core.Either
-import arrow.core.flatMap
+import arrow.core.Validated
+import arrow.core.ValidatedNel
+import arrow.core.continuations.either
+import arrow.core.zip
+import fr.wc.core.*
 import fr.wc.core.error.ApplicationError
-import fr.wc.core.error.EmptyChampionshipName
-import fr.wc.core.error.ScheduledInPastChampionship
+import fr.wc.core.error.IncorrectInput
 import fr.wc.core.model.championship.Championship
 import fr.wc.core.model.command.CreateChampionshipCommand
 import fr.wc.core.repository.ChampionshipRepository
 import fr.wc.utils.IdGenerator
-import fr.wc.utils.TimeProvider
+import java.time.LocalDate
 
 class CreateChampionship(private val championshipRepository: ChampionshipRepository) :
     UseCase<CreateChampionshipCommand, Championship> {
     override suspend fun execute(
         input: CreateChampionshipCommand,
-    ): Either<ApplicationError, Championship> {
-        return this.validate(input)
-            .map {
-                Championship.createdChampionship(
-                    IdGenerator.generate(),
-                    input.name,
-                    input.date,
-                    input.divisions
-                )
-            }
-            .flatMap { championshipRepository.save(it) }
-    }
-
-    private fun validate(
-        command: CreateChampionshipCommand,
-    ): Either<ApplicationError, CreateChampionshipCommand> {
-
-        if (command.name.isEmpty()) {
-            return Either.Left(EmptyChampionshipName)
-        }
-
-        if (command.date.isBefore(TimeProvider.today())) {
-            return Either.Left(ScheduledInPastChampionship)
-        }
-
-        return Either.Right(command)
+    ): Either<ApplicationError, Championship> = either {
+        val (name, date, divisions) = input.validate().bind()
+        val championship = Championship.createdChampionship(
+            IdGenerator.generate(),
+            name,
+            date,
+            divisions
+        )
+        championshipRepository.save(championship).bind()
     }
 }
+
+fun String.validChampionshipName(): ValidatedNel<InvalidName, String> =
+    trim().notBlank().mapLeft(toInvalidField(::InvalidName))
+
+fun LocalDate.validChampionshipDate(): ValidatedNel<InvalidDate, LocalDate> =
+    notScheduleInPast().mapLeft(toInvalidField(::InvalidDate))
+
+fun CreateChampionshipCommand.validate(): Validated<IncorrectInput, CreateChampionshipCommand> =
+    name.validChampionshipName()
+        .zip(date.validChampionshipDate()) { name, date -> CreateChampionshipCommand(name, date, this.divisions) }
+        .mapLeft(::IncorrectInput)
