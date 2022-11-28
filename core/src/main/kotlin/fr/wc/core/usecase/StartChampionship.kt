@@ -1,28 +1,25 @@
 package fr.wc.core.usecase
 
-import arrow.core.*
+import arrow.core.Either
+import arrow.core.continuations.either
+import arrow.core.left
+import arrow.core.right
 import fr.wc.core.error.ApplicationError
-import fr.wc.core.error.ChampionshipNotFound
 import fr.wc.core.error.NoEvent
 import fr.wc.core.error.NotEnoughAthlete
 import fr.wc.core.model.championship.Championship
 import fr.wc.core.model.championship.ChampionshipStatus
 import fr.wc.core.model.championship.status
 import fr.wc.core.model.command.StartChampionshipCommand
-import fr.wc.inmemory.repository.InMemoryChampionshipRepository
+import fr.wc.core.repository.ChampionshipRepository
 
-class StartChampionship(private val championshipRepository: InMemoryChampionshipRepository) :
+class StartChampionship(private val championshipRepository: ChampionshipRepository) :
     UseCase<StartChampionshipCommand, Championship> {
-    override suspend fun execute(
-        input: StartChampionshipCommand
-    ): Either<ApplicationError, Championship> {
+    override suspend fun execute(input: StartChampionshipCommand): Either<ApplicationError, Championship> = either {
         // TODO handle other type of Championship
-        val championship = championshipRepository.get(input.championshipId)
-
-        return when (championship) {
-            is Some -> start(championship.value)
-            is None -> ChampionshipNotFound(input.championshipId).left()
-        }.flatMap { championshipRepository.save(it) }
+        val championship = championshipRepository.get(input.championshipId).bind()
+        val updated = start(championship).bind()
+        championshipRepository.save(updated).bind()
     }
 
     private fun start(championship: Championship): Either<ApplicationError, Championship> {

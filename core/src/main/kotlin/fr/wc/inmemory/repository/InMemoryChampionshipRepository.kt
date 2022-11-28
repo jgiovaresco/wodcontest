@@ -1,11 +1,11 @@
 package fr.wc.inmemory.repository
 
 import arrow.core.Either
-import arrow.core.None
-import arrow.core.Option
-import arrow.core.Some
+import arrow.core.left
+import arrow.core.right
 import fr.wc.core.error.AlreadyExistingChampionship
 import fr.wc.core.error.ApplicationError
+import fr.wc.core.error.ChampionshipNotFound
 import fr.wc.core.model.championship.Championship
 import fr.wc.core.model.championship.ChampionshipId
 import fr.wc.core.repository.ChampionshipRepository
@@ -31,10 +31,10 @@ class InMemoryChampionshipRepository : ChampionshipRepository {
         return Either.Left(AlreadyExistingChampionship(championship.info.name))
     }
 
-    override suspend fun get(championshipId: ChampionshipId): Option<Championship> {
-        val result = storage.find { it.id == championshipId } ?: return None
+    override suspend fun get(championshipId: ChampionshipId): Either<ApplicationError, Championship> {
+        val result = storage.find { it.id == championshipId } ?: return ChampionshipNotFound(championshipId).left()
 
-        return Some(result)
+        return result.right()
     }
 
     fun reset() {

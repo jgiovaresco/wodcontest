@@ -11,7 +11,6 @@ import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.datatest.withData
 import strikt.api.*
 import strikt.arrow.isRight
-import strikt.arrow.isSome
 import strikt.assertions.*
 
 class RegisterAthleteTest :
@@ -59,7 +58,7 @@ class RegisterAthleteTest :
                 usecase.execute(command)
 
                 val found = championshipRepository.get(championship.id)
-                expectThat(found).isSome().with({ value }) {
+                expectThat(found).isRight().with({ value }) {
                     get { registeredAthletes.athletesFrom(rxMaleDivision).map(Athlete::name) }
                         .containsExactly(command.athlete.name)
                 }

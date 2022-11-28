@@ -9,7 +9,6 @@ import io.kotest.assertions.fail
 import io.kotest.core.spec.style.ShouldSpec
 import strikt.api.*
 import strikt.arrow.isRight
-import strikt.arrow.isSome
 import strikt.assertions.*
 
 class RegisterEventTest :
@@ -41,7 +40,7 @@ class RegisterEventTest :
         usecase.execute(command)
 
         val found = championshipRepository.get(championship.id)
-        expectThat(found).isSome().with({ value }) {
+        expectThat(found).isRight().with({ value }) {
           get { registeredEvents }.map(Event::name).containsExactly(command.name)
         }
       }

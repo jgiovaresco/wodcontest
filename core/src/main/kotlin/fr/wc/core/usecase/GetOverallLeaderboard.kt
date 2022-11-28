@@ -1,25 +1,22 @@
 package fr.wc.core.usecase
 
 import arrow.core.Either
-import arrow.core.None
-import arrow.core.Some
+import arrow.core.continuations.either
 import arrow.core.right
 import fr.wc.core.error.ApplicationError
-import fr.wc.core.error.ChampionshipNotFound
 import fr.wc.core.model.championship.Championship
 import fr.wc.core.model.leaderboard.*
 import fr.wc.core.model.query.GetOverallLeaderboardQuery
-import fr.wc.inmemory.repository.InMemoryChampionshipRepository
+import fr.wc.core.repository.ChampionshipRepository
 import fr.wc.utils.last
 
-class GetOverallLeaderboard(private val championshipRepository: InMemoryChampionshipRepository) :
+class GetOverallLeaderboard(private val championshipRepository: ChampionshipRepository) :
     UseCase<GetOverallLeaderboardQuery, OverallLeaderboard> {
-    override suspend fun execute(input: GetOverallLeaderboardQuery): Either<ApplicationError, OverallLeaderboard> {
-        return when (val championship = championshipRepository.get(input.championshipId)) {
-            is Some -> overallLeaderboard(championship.value)
-            is None -> Either.Left(ChampionshipNotFound(input.championshipId))
+    override suspend fun execute(input: GetOverallLeaderboardQuery): Either<ApplicationError, OverallLeaderboard> =
+        either {
+            val championship = championshipRepository.get(input.championshipId).bind()
+            overallLeaderboard(championship).bind()
         }
-    }
 
     private fun overallLeaderboard(
         championship: Championship,

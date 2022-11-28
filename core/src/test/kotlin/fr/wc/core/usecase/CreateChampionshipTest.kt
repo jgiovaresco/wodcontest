@@ -15,7 +15,6 @@ import io.kotest.assertions.fail
 import io.kotest.core.spec.style.ShouldSpec
 import strikt.api.*
 import strikt.arrow.isRight
-import strikt.arrow.isSome
 import strikt.assertions.*
 
 class CreateChampionshipTest :
@@ -52,7 +51,7 @@ class CreateChampionshipTest :
                 { e -> fail("No error expected but $e") },
                 { r ->
                     val found = championshipRepository.get(r.id)
-                    expectThat(found).isSome().with({ value }) {
+                    expectThat(found).isRight().with({ value }) {
                         get { status }.isEqualTo(ChampionshipStatus.Created)
                         get { info.name }.isEqualTo(command.name)
                         get { info.date }.isEqualTo(command.date)

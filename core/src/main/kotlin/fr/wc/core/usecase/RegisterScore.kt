@@ -1,7 +1,12 @@
 package fr.wc.core.usecase
 
-import arrow.core.*
-import fr.wc.core.error.*
+import arrow.core.Either
+import arrow.core.continuations.either
+import arrow.core.left
+import fr.wc.core.error.ApplicationError
+import fr.wc.core.error.AthleteNotFound
+import fr.wc.core.error.EventNotFound
+import fr.wc.core.error.IncorrectScoreType
 import fr.wc.core.model.championship.Championship
 import fr.wc.core.model.championship.EventScore
 import fr.wc.core.model.championship.scores
@@ -10,14 +15,11 @@ import fr.wc.core.repository.ChampionshipRepository
 
 class RegisterScore(private val championshipRepository: ChampionshipRepository) :
     UseCase<RegisterScoreCommand, Championship> {
-    override suspend fun execute(input: RegisterScoreCommand): Either<ApplicationError, Championship> {
+    override suspend fun execute(input: RegisterScoreCommand): Either<ApplicationError, Championship> = either {
         // TODO handle other type of Championship
-        val championship = championshipRepository.get(input.championshipId)
-
-        return when (championship) {
-            is Some -> registerScore(championship.value, input)
-            is None -> ChampionshipNotFound(input.championshipId).left()
-        }.flatMap { championshipRepository.save(it) }
+        val championship = championshipRepository.get(input.championshipId).bind()
+        val updated = registerScore(championship, input).bind()
+        championshipRepository.save(updated).bind()
     }
 
     private fun registerScore(

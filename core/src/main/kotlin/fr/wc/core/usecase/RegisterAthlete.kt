@@ -1,8 +1,9 @@
 package fr.wc.core.usecase
 
-import arrow.core.*
+import arrow.core.Either
+import arrow.core.continuations.either
+import arrow.core.left
 import fr.wc.core.error.ApplicationError
-import fr.wc.core.error.ChampionshipNotFound
 import fr.wc.core.error.IncorrectDivision
 import fr.wc.core.error.UnavailableDivision
 import fr.wc.core.model.Athlete
@@ -17,14 +18,11 @@ class RegisterAthlete(private val championshipRepository: ChampionshipRepository
     UseCase<RegisterAthleteCommand, Championship> {
     override suspend fun execute(
         input: RegisterAthleteCommand,
-    ): Either<ApplicationError, Championship> {
+    ): Either<ApplicationError, Championship> = either {
         // TODO handle other type of Championship
-        val championship = championshipRepository.get(input.championshipId)
-
-        return when (championship) {
-            is Some -> registerAthlete(championship.value, input)
-            is None -> Either.Left(ChampionshipNotFound(input.championshipId))
-        }.flatMap { championshipRepository.save(it) }
+        val championship = championshipRepository.get(input.championshipId).bind()
+        val updated = registerAthlete(championship, input).bind()
+        championshipRepository.save(updated).bind()
     }
 
     private fun registerAthlete(
