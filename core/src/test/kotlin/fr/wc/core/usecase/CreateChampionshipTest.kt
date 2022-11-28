@@ -1,7 +1,9 @@
 package fr.wc.core.usecase
 
 import arrow.core.flatMap
-import fr.wc.core.error.ApplicationError
+import fr.wc.core.error.AlreadyExistingChampionship
+import fr.wc.core.error.EmptyChampionshipName
+import fr.wc.core.error.ScheduledInPastChampionship
 import fr.wc.core.model.aCreateChampionshipCommand
 import fr.wc.core.model.championship.ChampionshipStatus
 import fr.wc.inmemory.repository.InMemoryChampionshipRepository
@@ -63,7 +65,7 @@ class CreateChampionshipTest :
             val result = usecase.execute(command)
 
             result.fold(
-                { r -> expectThat(r).isA<ApplicationError.EmptyChampionshipName>() },
+                { r -> expectThat(r).isA<EmptyChampionshipName>() },
                 { fail("error expected") }
             )
         }
@@ -75,7 +77,7 @@ class CreateChampionshipTest :
             val result = usecase.execute(command)
 
             result.fold(
-                { r -> expectThat(r).isA<ApplicationError.ScheduledInPastChampionship>() },
+                { r -> expectThat(r).isA<ScheduledInPastChampionship>() },
                 { fail("error expected") }
             )
         }
@@ -88,7 +90,7 @@ class CreateChampionshipTest :
                 .execute(command1)
                 .flatMap { usecase.execute(command2) }
                 .fold(
-                    { r -> expectThat(r).isA<ApplicationError.AlreadyExistingChampionship>() },
+                    { r -> expectThat(r).isA<AlreadyExistingChampionship>() },
                     { fail("error expected") }
                 )
         }

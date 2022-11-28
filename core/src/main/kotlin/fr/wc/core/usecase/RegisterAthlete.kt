@@ -2,6 +2,9 @@ package fr.wc.core.usecase
 
 import arrow.core.*
 import fr.wc.core.error.ApplicationError
+import fr.wc.core.error.ChampionshipNotFound
+import fr.wc.core.error.IncorrectDivision
+import fr.wc.core.error.UnavailableDivision
 import fr.wc.core.model.Athlete
 import fr.wc.core.model.Division
 import fr.wc.core.model.championship.Championship
@@ -20,7 +23,7 @@ class RegisterAthlete(private val championshipRepository: ChampionshipRepository
 
         return when (championship) {
             is Some -> registerAthlete(championship.value, input)
-            is None -> Either.Left(ApplicationError.ChampionshipNotFound(input.championshipId))
+            is None -> Either.Left(ChampionshipNotFound(input.championshipId))
         }.flatMap { championshipRepository.save(it) }
     }
 
@@ -30,10 +33,10 @@ class RegisterAthlete(private val championshipRepository: ChampionshipRepository
     ): Either<ApplicationError, Championship> {
 
         return championship.info.division(command.division)
-            .toEither { ApplicationError.UnavailableDivision(command.division) }
+            .toEither { UnavailableDivision(command.division) }
             .map {
                 if (!it.accept(command.athlete)) {
-                    return ApplicationError.IncorrectDivision(
+                    return IncorrectDivision(
                         command.division,
                         command.athlete
                     ).left()

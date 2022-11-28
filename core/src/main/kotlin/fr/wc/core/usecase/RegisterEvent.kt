@@ -2,6 +2,7 @@ package fr.wc.core.usecase
 
 import arrow.core.*
 import fr.wc.core.error.ApplicationError
+import fr.wc.core.error.ChampionshipNotFound
 import fr.wc.core.model.Event
 import fr.wc.core.model.EventId
 import fr.wc.core.model.championship.Championship
@@ -20,7 +21,7 @@ class RegisterEvent(private val championshipRepository: ChampionshipRepository) 
 
     return when (championship) {
         is Some -> registerEvent(championship.value, input).right()
-        is None -> ApplicationError.ChampionshipNotFound(input.championshipId).left()
+        is None -> ChampionshipNotFound(input.championshipId).left()
     }.flatMap { championshipRepository.save(it) }
   }
 

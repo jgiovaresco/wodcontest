@@ -1,7 +1,7 @@
 package fr.wc.core.usecase
 
 import arrow.core.*
-import fr.wc.core.error.ApplicationError
+import fr.wc.core.error.*
 import fr.wc.core.model.championship.Championship
 import fr.wc.core.model.championship.EventScore
 import fr.wc.core.model.championship.scores
@@ -16,7 +16,7 @@ class RegisterScore(private val championshipRepository: ChampionshipRepository) 
 
         return when (championship) {
             is Some -> registerScore(championship.value, input)
-            is None -> ApplicationError.ChampionshipNotFound(input.championshipId).left()
+            is None -> ChampionshipNotFound(input.championshipId).left()
         }.flatMap { championshipRepository.save(it) }
     }
 
@@ -26,14 +26,14 @@ class RegisterScore(private val championshipRepository: ChampionshipRepository) 
     ): Either<ApplicationError, Championship> {
 
         return Either.fromNullable(championship.registeredEvents.find { it.id == command.eventId })
-            .mapLeft { ApplicationError.EventNotFound(command.eventId) }
+            .mapLeft { EventNotFound(command.eventId) }
             .map { event ->
                 if (event.scoreType != command.score.type) {
-                    return ApplicationError.IncorrectScoreType(event, command.score).left()
+                    return IncorrectScoreType(event, command.score).left()
                 }
 
                 if (!championship.registeredAthletes.contains(command.athleteId)) {
-                    return ApplicationError.AthleteNotFound(command.athleteId).left()
+                    return AthleteNotFound(command.athleteId).left()
                 }
             }
             .map {

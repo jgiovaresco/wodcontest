@@ -5,6 +5,7 @@ import arrow.core.None
 import arrow.core.Some
 import arrow.core.right
 import fr.wc.core.error.ApplicationError
+import fr.wc.core.error.ChampionshipNotFound
 import fr.wc.core.model.championship.Championship
 import fr.wc.core.model.leaderboard.*
 import fr.wc.core.model.query.GetOverallLeaderboardQuery
@@ -16,7 +17,7 @@ class GetOverallLeaderboard(private val championshipRepository: InMemoryChampion
     override suspend fun execute(input: GetOverallLeaderboardQuery): Either<ApplicationError, OverallLeaderboard> {
         return when (val championship = championshipRepository.get(input.championshipId)) {
             is Some -> overallLeaderboard(championship.value)
-            is None -> Either.Left(ApplicationError.ChampionshipNotFound(input.championshipId))
+            is None -> Either.Left(ChampionshipNotFound(input.championshipId))
         }
     }
 

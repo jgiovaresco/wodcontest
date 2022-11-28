@@ -1,7 +1,7 @@
 package fr.wc.core.usecase
 
 import arrow.core.continuations.either
-import fr.wc.core.error.ApplicationError
+import fr.wc.core.error.ChampionshipNotFound
 import fr.wc.core.model.*
 import fr.wc.core.model.championship.ChampionshipBuilder
 import fr.wc.core.model.leaderboard.OverallRankTuple
@@ -186,7 +186,7 @@ class GetOverallLeaderboardTest : ShouldSpec({
             val result = usecase.execute(query)
 
             result.fold(
-                { r -> expectThat(r).isA<ApplicationError.ChampionshipNotFound>() },
+                { r -> expectThat(r).isA<ChampionshipNotFound>() },
                 { fail("error expected") }
             )
         }

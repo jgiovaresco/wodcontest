@@ -5,6 +5,7 @@ import arrow.core.None
 import arrow.core.Some
 import arrow.core.right
 import fr.wc.core.error.ApplicationError
+import fr.wc.core.error.ChampionshipNotFound
 import fr.wc.core.model.championship.Championship
 import fr.wc.core.model.leaderboard.EventLeaderboard
 import fr.wc.core.model.leaderboard.rankAthletes
@@ -19,7 +20,7 @@ class GetEventLeaderboard(private val championshipRepository: InMemoryChampionsh
 
         return when (championship) {
             is Some -> eventLeaderboard(championship.value, input)
-            is None -> Either.Left(ApplicationError.ChampionshipNotFound(input.championshipId))
+            is None -> Either.Left(ChampionshipNotFound(input.championshipId))
         }
     }
 

@@ -1,6 +1,8 @@
 package fr.wc.core.usecase
 
-import fr.wc.core.error.ApplicationError
+import fr.wc.core.error.ChampionshipNotFound
+import fr.wc.core.error.NoEvent
+import fr.wc.core.error.NotEnoughAthlete
 import fr.wc.core.model.aStartChampionshipCommand
 import fr.wc.core.model.championship.ChampionshipBuilder.Builder.aChampionship
 import fr.wc.core.model.championship.ChampionshipStatus
@@ -56,7 +58,7 @@ class StartChampionshipTest :
                 val result = usecase.execute(command)
 
                 result.fold(
-                    { r -> expectThat(r).isA<ApplicationError.NotEnoughAthlete>() },
+                    { r -> expectThat(r).isA<NotEnoughAthlete>() },
                     { fail("error expected") }
                 )
             }
@@ -69,7 +71,7 @@ class StartChampionshipTest :
                 val result = usecase.execute(command)
 
                 result.fold(
-                    { r -> expectThat(r).isA<ApplicationError.NoEvent>() },
+                    { r -> expectThat(r).isA<NoEvent>() },
                     { fail("error expected") }
                 )
             }
@@ -82,7 +84,7 @@ class StartChampionshipTest :
                 val result = usecase.execute(command)
 
                 result.fold(
-                    { r -> expectThat(r).isA<ApplicationError.ChampionshipNotFound>() },
+                    { r -> expectThat(r).isA<ChampionshipNotFound>() },
                     { fail("error expected") }
                 )
             }

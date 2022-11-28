@@ -2,6 +2,9 @@ package fr.wc.core.usecase
 
 import arrow.core.*
 import fr.wc.core.error.ApplicationError
+import fr.wc.core.error.ChampionshipNotFound
+import fr.wc.core.error.NoEvent
+import fr.wc.core.error.NotEnoughAthlete
 import fr.wc.core.model.championship.Championship
 import fr.wc.core.model.championship.ChampionshipStatus
 import fr.wc.core.model.championship.status
@@ -18,17 +21,17 @@ class StartChampionship(private val championshipRepository: InMemoryChampionship
 
         return when (championship) {
             is Some -> start(championship.value)
-            is None -> ApplicationError.ChampionshipNotFound(input.championshipId).left()
+            is None -> ChampionshipNotFound(input.championshipId).left()
         }.flatMap { championshipRepository.save(it) }
     }
 
     private fun start(championship: Championship): Either<ApplicationError, Championship> {
         if (championship.registeredEvents.isEmpty()) {
-            return ApplicationError.NoEvent.left()
+            return NoEvent.left()
         }
 
         if (!championship.allDivisionsHaveEnoughAthlete()) {
-            return ApplicationError.NotEnoughAthlete.left()
+            return NotEnoughAthlete.left()
         }
 
         return Championship.status.set(championship, ChampionshipStatus.Started).right()

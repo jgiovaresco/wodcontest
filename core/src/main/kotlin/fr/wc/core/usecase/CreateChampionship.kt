@@ -3,6 +3,8 @@ package fr.wc.core.usecase
 import arrow.core.Either
 import arrow.core.flatMap
 import fr.wc.core.error.ApplicationError
+import fr.wc.core.error.EmptyChampionshipName
+import fr.wc.core.error.ScheduledInPastChampionship
 import fr.wc.core.model.championship.Championship
 import fr.wc.core.model.command.CreateChampionshipCommand
 import fr.wc.core.repository.ChampionshipRepository
@@ -31,11 +33,11 @@ class CreateChampionship(private val championshipRepository: ChampionshipReposit
     ): Either<ApplicationError, CreateChampionshipCommand> {
 
         if (command.name.isEmpty()) {
-            return Either.Left(ApplicationError.EmptyChampionshipName)
+            return Either.Left(EmptyChampionshipName)
         }
 
         if (command.date.isBefore(TimeProvider.today())) {
-            return Either.Left(ApplicationError.ScheduledInPastChampionship)
+            return Either.Left(ScheduledInPastChampionship)
         }
 
         return Either.Right(command)

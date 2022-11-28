@@ -1,6 +1,9 @@
 package fr.wc.core.usecase
 
-import fr.wc.core.error.ApplicationError
+import fr.wc.core.error.AthleteNotFound
+import fr.wc.core.error.ChampionshipNotFound
+import fr.wc.core.error.EventNotFound
+import fr.wc.core.error.IncorrectScoreType
 import fr.wc.core.model.*
 import fr.wc.core.model.championship.ChampionshipBuilder
 import fr.wc.core.model.championship.EventScore
@@ -58,7 +61,7 @@ class RegisterScoreTest : ShouldSpec({
             val result = usecase.execute(command)
 
             result.fold(
-                { r -> expectThat(r).isA<ApplicationError.EventNotFound>() },
+                { r -> expectThat(r).isA<EventNotFound>() },
                 { fail("error expected") }
             )
         }
@@ -76,7 +79,7 @@ class RegisterScoreTest : ShouldSpec({
             val result = usecase.execute(command)
 
             result.fold(
-                { r -> expectThat(r).isA<ApplicationError.IncorrectScoreType>() },
+                { r -> expectThat(r).isA<IncorrectScoreType>() },
                 { fail("error expected") }
             )
         }
@@ -94,7 +97,7 @@ class RegisterScoreTest : ShouldSpec({
             val result = usecase.execute(command)
 
             result.fold(
-                { r -> expectThat(r).isA<ApplicationError.AthleteNotFound>() },
+                { r -> expectThat(r).isA<AthleteNotFound>() },
                 { fail("error expected") }
             )
         }
@@ -107,7 +110,7 @@ class RegisterScoreTest : ShouldSpec({
             val result = usecase.execute(command)
 
             result.fold(
-                { r -> expectThat(r).isA<ApplicationError.ChampionshipNotFound>() },
+                { r -> expectThat(r).isA<ChampionshipNotFound>() },
                 { fail("error expected") }
             )
         }

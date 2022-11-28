@@ -1,6 +1,6 @@
 package fr.wc.core.usecase
 
-import fr.wc.core.error.ApplicationError
+import fr.wc.core.error.ChampionshipNotFound
 import fr.wc.core.model.Event
 import fr.wc.core.model.aRegisterEventCommand
 import fr.wc.core.model.championship.ChampionshipBuilder.Builder.aChampionship
@@ -54,7 +54,7 @@ class RegisterEventTest :
         val result = usecase.execute(command)
 
         result.fold(
-          { r -> expectThat(r).isA<ApplicationError.ChampionshipNotFound>() },
+          { r -> expectThat(r).isA<ChampionshipNotFound>() },
           { fail("error expected") }
         )
       }

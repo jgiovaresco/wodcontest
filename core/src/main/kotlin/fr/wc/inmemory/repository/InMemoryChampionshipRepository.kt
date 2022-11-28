@@ -4,6 +4,7 @@ import arrow.core.Either
 import arrow.core.None
 import arrow.core.Option
 import arrow.core.Some
+import fr.wc.core.error.AlreadyExistingChampionship
 import fr.wc.core.error.ApplicationError
 import fr.wc.core.model.championship.Championship
 import fr.wc.core.model.championship.ChampionshipId
@@ -27,7 +28,7 @@ class InMemoryChampionshipRepository : ChampionshipRepository {
             return Either.Right(championship)
         }
 
-        return Either.Left(ApplicationError.AlreadyExistingChampionship(championship.info.name))
+        return Either.Left(AlreadyExistingChampionship(championship.info.name))
     }
 
     override suspend fun get(championshipId: ChampionshipId): Option<Championship> {

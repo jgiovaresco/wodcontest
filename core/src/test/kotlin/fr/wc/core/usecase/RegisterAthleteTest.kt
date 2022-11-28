@@ -1,6 +1,8 @@
 package fr.wc.core.usecase
 
-import fr.wc.core.error.ApplicationError
+import fr.wc.core.error.ChampionshipNotFound
+import fr.wc.core.error.IncorrectDivision
+import fr.wc.core.error.UnavailableDivision
 import fr.wc.core.model.*
 import fr.wc.core.model.championship.ChampionshipBuilder.Builder.aChampionship
 import fr.wc.inmemory.repository.InMemoryChampionshipRepository
@@ -78,7 +80,7 @@ class RegisterAthleteTest :
                     val result = usecase.execute(command)
 
                     result.fold(
-                        { r -> expectThat(r).isA<ApplicationError.UnavailableDivision>() },
+                        { r -> expectThat(r).isA<UnavailableDivision>() },
                         { fail("error expected") }
                     )
                 }
@@ -95,7 +97,7 @@ class RegisterAthleteTest :
                 val result = usecase.execute(command)
 
                 result.fold(
-                    { r -> expectThat(r).isA<ApplicationError.IncorrectDivision>() },
+                    { r -> expectThat(r).isA<IncorrectDivision>() },
                     { fail("error expected") }
                 )
             }
@@ -112,7 +114,7 @@ class RegisterAthleteTest :
                 val result = usecase.execute(command)
 
                 result.fold(
-                    { r -> expectThat(r).isA<ApplicationError.ChampionshipNotFound>() },
+                    { r -> expectThat(r).isA<ChampionshipNotFound>() },
                     { fail("error expected") }
                 )
             }
