@@ -4,10 +4,6 @@ import arrow.core.continuations.either
 import fr.wc.core.error.ChampionshipNotFound
 import fr.wc.core.model.*
 import fr.wc.core.model.championship.ChampionshipBuilder
-import fr.wc.core.model.leaderboard.OverallRankTuple
-import fr.wc.core.model.leaderboard.RankTuple
-import fr.wc.core.model.leaderboard.toEventLeaderboardPair
-import fr.wc.core.model.leaderboard.toOverallRankTuple
 import fr.wc.inmemory.repository.InMemoryChampionshipRepository
 import io.kotest.assertions.fail
 import io.kotest.core.spec.style.ShouldSpec
