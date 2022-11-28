@@ -6,9 +6,7 @@ package fr.wc.core.model
 import arrow.core.*
 import arrow.core.continuations.either
 import arrow.optics.optics
-import fr.wc.core.error.ChampionshipStartError
-import fr.wc.core.error.NoEvent
-import fr.wc.core.error.NotEnoughAthlete
+import fr.wc.core.error.*
 import fr.wc.core.model.*
 import java.time.LocalDate
 
@@ -33,8 +31,6 @@ data class RegisteredAthletes(val registrations: List<Pair<Division, Athlete>> =
 
     fun athletesFrom(division: Division): List<Athlete> =
         registrations.filter { it.first == division }.map { it.second }
-
-    fun contains(id: AthleteId) = registrations.any { it.second.id == id }
 }
 
 @optics
@@ -80,6 +76,14 @@ fun Championship.registerNewEvent(newEvent: Event) =
         list
     }
 
+fun Championship.registerScore(eventScore: EventScore) =
+    Championship.scores.modify(this) {
+        val list = mutableListOf<EventScore>()
+        list.addAll(it)
+        list.add(eventScore)
+        list
+    }
+
 fun Championship.readyToStart(): Validated<ChampionshipStartError, Championship> =
     when {
         info.divisions.any { (registeredAthletes.athletesFrom(it).size < 2) } -> NotEnoughAthlete.invalid()
@@ -91,3 +95,12 @@ fun Championship.start(): Either<ChampionshipStartError, Championship> = either.
     val championship = readyToStart().bind()
     Championship.status.set(championship, ChampionshipStatus.Started)
 }
+
+fun Championship.findEvent(eventId: EventId): Either<ApplicationError, Event> =
+    Either.fromNullable(registeredEvents.find { it.id == eventId })
+        .mapLeft { EventNotFound }
+
+fun Championship.findAthlete(athleteId: AthleteId): Either<ApplicationError, Athlete> =
+    Either.fromNullable(registeredAthletes.registrations.find { it.second.id == athleteId })
+        .mapLeft { AthleteNotFound(athleteId) }
+        .map { it.second }
