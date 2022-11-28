@@ -17,6 +17,10 @@ data class InvalidDate(override val errors: NonEmptyList<String>) : InvalidField
     override val field: String = "date"
 }
 
+data class InvalidDivision(override val errors: NonEmptyList<String>) : InvalidField {
+    override val field: String = "division"
+}
+
 fun <A : InvalidField> toInvalidField(transform: (NonEmptyList<String>) -> A): (NonEmptyList<String>) -> NonEmptyList<A> =
     { nel -> nonEmptyListOf(transform(nel)) }
 

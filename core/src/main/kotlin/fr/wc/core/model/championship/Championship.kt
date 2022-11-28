@@ -1,10 +1,11 @@
+// Until https://github.com/arrow-kt/arrow/pull/2850 | https://github.com/arrow-kt/arrow/issues/2803 available
+@file:JvmName("ChampionshipJvm")
+
 package fr.wc.core.model.championship
 
-import arrow.core.None
-import arrow.core.Option
-import arrow.core.Some
 import arrow.optics.optics
 import fr.wc.core.model.*
+import fr.wc.core.model.command.RegisterAthleteCommand
 import java.time.LocalDate
 
 enum class ChampionshipStatus {
@@ -20,10 +21,6 @@ data class ChampionshipId(val value: String) {
 @optics
 data class ChampionshipInfo(val name: String, val date: LocalDate, val divisions: List<Division>) {
     companion object
-    fun division(division: Division): Option<Division> {
-        val result = divisions.find { it == division } ?: return None
-        return Some(result)
-    }
 }
 
 @optics
@@ -65,3 +62,11 @@ data class Championship(
     fun allDivisionsHaveEnoughAthlete() =
         info.divisions.all { (registeredAthletes.athletesFrom(it).size >= 2) }
 }
+
+fun Championship.registerAthlete(division: Division, athlete: Athlete) =
+    Championship.registeredAthletes.registrations.modify(this) { l ->
+        val list = mutableListOf<Pair<Division, Athlete>>()
+        list.addAll(l)
+        list.add(Pair(division, athlete))
+        list
+    }

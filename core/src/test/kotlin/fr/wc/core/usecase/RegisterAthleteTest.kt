@@ -1,14 +1,14 @@
 package fr.wc.core.usecase
 
+import arrow.core.nonEmptyListOf
+import fr.wc.core.InvalidDivision
 import fr.wc.core.error.ChampionshipNotFound
-import fr.wc.core.error.IncorrectDivision
-import fr.wc.core.error.UnavailableDivision
+import fr.wc.core.error.IncorrectInput
 import fr.wc.core.model.*
 import fr.wc.core.model.championship.ChampionshipBuilder.Builder.aChampionship
 import fr.wc.inmemory.repository.InMemoryChampionshipRepository
 import io.kotest.assertions.fail
 import io.kotest.core.spec.style.ShouldSpec
-import io.kotest.datatest.withData
 import strikt.api.*
 import strikt.arrow.isRight
 import strikt.assertions.*
@@ -18,7 +18,6 @@ class RegisterAthleteTest :
         val rxMaleDivision = Division(Gender.Male, Level.RX)
         val scaledMaleDivision = Division(Gender.Male, Level.SCALED)
         val rxFemaleDivision = Division(Gender.Female, Level.RX)
-        val scaledFemaleDivision = Division(Gender.Female, Level.SCALED)
 
         val championshipRepository = InMemoryChampionshipRepository()
         val usecase = RegisterAthlete(championshipRepository)
@@ -65,24 +64,22 @@ class RegisterAthleteTest :
             }
 
             context("prevent from registering an athlete in unsupported division") {
-                withData(
-                    scaledMaleDivision,
-                    scaledFemaleDivision,
-                ) { division ->
-                    val command =
-                        aRegisterAthleteCommand(
-                            championshipId = championship.id,
-                            athlete = aFemaleAthlete(),
-                            division = division,
-                        )
-
-                    val result = usecase.execute(command)
-
-                    result.fold(
-                        { r -> expectThat(r).isA<UnavailableDivision>() },
-                        { fail("error expected") }
+                val command =
+                    aRegisterAthleteCommand(
+                        championshipId = championship.id,
+                        athlete = aMaleAthlete(),
+                        division = scaledMaleDivision,
                     )
-                }
+
+                val result = usecase.execute(command)
+
+                result.fold(
+                    { r ->
+                        expectThat(r).isA<IncorrectInput>().get { errors }
+                            .contains(InvalidDivision(nonEmptyListOf("$scaledMaleDivision is unavailable")))
+                    },
+                    { fail("error expected") }
+                )
             }
 
             should("prevent from registering an athlete in the wrong division") {
@@ -96,7 +93,10 @@ class RegisterAthleteTest :
                 val result = usecase.execute(command)
 
                 result.fold(
-                    { r -> expectThat(r).isA<IncorrectDivision>() },
+                    { r ->
+                        expectThat(r).isA<IncorrectInput>().get { errors }
+                            .contains(InvalidDivision(nonEmptyListOf("$rxFemaleDivision cannot accept Male")))
+                    },
                     { fail("error expected") }
                 )
             }

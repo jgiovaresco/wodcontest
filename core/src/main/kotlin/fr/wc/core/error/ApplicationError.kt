@@ -18,10 +18,6 @@ data class AthleteNotFound(val id: AthleteId) : ApplicationError
 // CreateChampionshipError
 data class AlreadyExistingChampionship(val name: String) : ApplicationError
 
-// RegisterAthleteError
-data class UnavailableDivision(val division: Division) : ApplicationError
-data class IncorrectDivision(val division: Division, val athlete: Athlete) : ApplicationError
-
 // Starting
 object NotEnoughAthlete : ApplicationError
 object NoEvent : ApplicationError
