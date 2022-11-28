@@ -3,9 +3,9 @@ package fr.wc.core.usecase
 import fr.wc.core.error.ChampionshipNotFound
 import fr.wc.core.error.NoEvent
 import fr.wc.core.error.NotEnoughAthlete
+import fr.wc.core.model.ChampionshipStatus
 import fr.wc.core.model.aStartChampionshipCommand
 import fr.wc.core.model.championship.ChampionshipBuilder.Builder.aChampionship
-import fr.wc.core.model.championship.ChampionshipStatus
 import fr.wc.inmemory.repository.InMemoryChampionshipRepository
 import io.kotest.assertions.fail
 import io.kotest.core.spec.style.ShouldSpec

@@ -7,10 +7,10 @@ import arrow.core.right
 import fr.wc.core.error.ApplicationError
 import fr.wc.core.error.NoEvent
 import fr.wc.core.error.NotEnoughAthlete
-import fr.wc.core.model.championship.Championship
-import fr.wc.core.model.championship.ChampionshipStatus
-import fr.wc.core.model.championship.status
+import fr.wc.core.model.Championship
+import fr.wc.core.model.ChampionshipStatus
 import fr.wc.core.model.command.StartChampionshipCommand
+import fr.wc.core.model.status
 import fr.wc.core.repository.ChampionshipRepository
 
 class StartChampionship(private val championshipRepository: ChampionshipRepository) :

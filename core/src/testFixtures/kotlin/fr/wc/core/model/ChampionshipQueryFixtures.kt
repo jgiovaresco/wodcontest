@@ -1,6 +1,5 @@
 package fr.wc.core.model
 
-import fr.wc.core.model.championship.ChampionshipId
 import fr.wc.core.model.query.GetEventLeaderboardQuery
 import fr.wc.core.model.query.GetOverallLeaderboardQuery
 

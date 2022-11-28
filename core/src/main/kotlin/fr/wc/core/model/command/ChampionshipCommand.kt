@@ -1,7 +1,6 @@
 package fr.wc.core.model.command
 
 import fr.wc.core.model.*
-import fr.wc.core.model.championship.ChampionshipId
 import java.time.LocalDate
 
 sealed class ChampionshipCommand : Command

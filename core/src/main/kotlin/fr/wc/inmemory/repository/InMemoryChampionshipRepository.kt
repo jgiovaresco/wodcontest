@@ -6,8 +6,8 @@ import arrow.core.right
 import fr.wc.core.error.AlreadyExistingChampionship
 import fr.wc.core.error.ApplicationError
 import fr.wc.core.error.ChampionshipNotFound
-import fr.wc.core.model.championship.Championship
-import fr.wc.core.model.championship.ChampionshipId
+import fr.wc.core.model.Championship
+import fr.wc.core.model.ChampionshipId
 import fr.wc.core.repository.ChampionshipRepository
 
 class InMemoryChampionshipRepository : ChampionshipRepository {

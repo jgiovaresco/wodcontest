@@ -1,6 +1,5 @@
 package fr.wc.core.model
 
-import fr.wc.core.model.championship.ChampionshipId
 import fr.wc.core.model.command.*
 import fr.wc.utils.TimeProvider
 import java.time.LocalDate

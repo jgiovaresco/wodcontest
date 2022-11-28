@@ -6,8 +6,8 @@ import fr.wc.core.InvalidDate
 import fr.wc.core.InvalidName
 import fr.wc.core.error.AlreadyExistingChampionship
 import fr.wc.core.error.IncorrectInput
+import fr.wc.core.model.ChampionshipStatus
 import fr.wc.core.model.aCreateChampionshipCommand
-import fr.wc.core.model.championship.ChampionshipStatus
 import fr.wc.inmemory.repository.InMemoryChampionshipRepository
 import fr.wc.utils.IdGenerator
 import fr.wc.utils.TimeProvider

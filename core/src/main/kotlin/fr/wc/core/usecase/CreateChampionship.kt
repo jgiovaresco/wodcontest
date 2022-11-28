@@ -8,7 +8,7 @@ import arrow.core.zip
 import fr.wc.core.*
 import fr.wc.core.error.ApplicationError
 import fr.wc.core.error.IncorrectInput
-import fr.wc.core.model.championship.Championship
+import fr.wc.core.model.Championship
 import fr.wc.core.model.command.CreateChampionshipCommand
 import fr.wc.core.repository.ChampionshipRepository
 import fr.wc.utils.IdGenerator

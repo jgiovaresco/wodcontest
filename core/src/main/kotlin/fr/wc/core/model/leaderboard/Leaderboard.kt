@@ -4,8 +4,10 @@ import arrow.core.Tuple4
 import arrow.core.Tuple5
 import arrow.optics.Iso
 import arrow.optics.optics
-import fr.wc.core.model.*
-import fr.wc.core.model.championship.EventScore
+import fr.wc.core.model.AthleteId
+import fr.wc.core.model.EventId
+import fr.wc.core.model.EventScore
+import fr.wc.core.model.Score
 import fr.wc.utils.last
 
 

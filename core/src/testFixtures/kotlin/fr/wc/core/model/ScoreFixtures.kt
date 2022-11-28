@@ -1,6 +1,5 @@
 package fr.wc.core.model
 
-import fr.wc.core.model.championship.EventScore
 import kotlin.random.Random
 import kotlin.random.nextUInt
 

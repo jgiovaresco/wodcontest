@@ -1,7 +1,7 @@
 package fr.wc.core.model.query
 
+import fr.wc.core.model.ChampionshipId
 import fr.wc.core.model.EventId
-import fr.wc.core.model.championship.ChampionshipId
 
 sealed class ChampionshipQuery(open val championshipId: ChampionshipId) : Query
 

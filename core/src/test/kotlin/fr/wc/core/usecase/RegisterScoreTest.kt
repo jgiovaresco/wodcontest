@@ -6,7 +6,6 @@ import fr.wc.core.error.EventNotFound
 import fr.wc.core.error.IncorrectScoreType
 import fr.wc.core.model.*
 import fr.wc.core.model.championship.ChampionshipBuilder
-import fr.wc.core.model.championship.EventScore
 import fr.wc.inmemory.repository.InMemoryChampionshipRepository
 import io.kotest.assertions.fail
 import io.kotest.core.spec.style.ShouldSpec

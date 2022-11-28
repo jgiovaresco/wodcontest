@@ -1,11 +1,10 @@
 // Until https://github.com/arrow-kt/arrow/pull/2850 | https://github.com/arrow-kt/arrow/issues/2803 available
 @file:JvmName("ChampionshipJvm")
 
-package fr.wc.core.model.championship
+package fr.wc.core.model
 
 import arrow.optics.optics
 import fr.wc.core.model.*
-import fr.wc.core.model.command.RegisterAthleteCommand
 import java.time.LocalDate
 
 enum class ChampionshipStatus {

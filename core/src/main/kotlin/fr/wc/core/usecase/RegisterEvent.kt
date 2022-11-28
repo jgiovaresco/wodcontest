@@ -3,11 +3,11 @@ package fr.wc.core.usecase
 import arrow.core.Either
 import arrow.core.continuations.either
 import fr.wc.core.error.ApplicationError
+import fr.wc.core.model.Championship
 import fr.wc.core.model.Event
 import fr.wc.core.model.EventId
-import fr.wc.core.model.championship.Championship
-import fr.wc.core.model.championship.registeredEvents
 import fr.wc.core.model.command.RegisterEventCommand
+import fr.wc.core.model.registeredEvents
 import fr.wc.core.repository.ChampionshipRepository
 import fr.wc.utils.IdGenerator
 

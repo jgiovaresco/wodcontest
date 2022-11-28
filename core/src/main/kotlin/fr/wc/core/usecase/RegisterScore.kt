@@ -7,10 +7,10 @@ import fr.wc.core.error.ApplicationError
 import fr.wc.core.error.AthleteNotFound
 import fr.wc.core.error.EventNotFound
 import fr.wc.core.error.IncorrectScoreType
-import fr.wc.core.model.championship.Championship
-import fr.wc.core.model.championship.EventScore
-import fr.wc.core.model.championship.scores
+import fr.wc.core.model.Championship
+import fr.wc.core.model.EventScore
 import fr.wc.core.model.command.RegisterScoreCommand
+import fr.wc.core.model.scores
 import fr.wc.core.repository.ChampionshipRepository
 
 class RegisterScore(private val championshipRepository: ChampionshipRepository) :

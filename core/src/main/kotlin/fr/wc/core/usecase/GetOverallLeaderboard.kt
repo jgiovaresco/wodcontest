@@ -4,7 +4,7 @@ import arrow.core.Either
 import arrow.core.continuations.either
 import arrow.core.right
 import fr.wc.core.error.ApplicationError
-import fr.wc.core.model.championship.Championship
+import fr.wc.core.model.Championship
 import fr.wc.core.model.leaderboard.*
 import fr.wc.core.model.query.GetOverallLeaderboardQuery
 import fr.wc.core.repository.ChampionshipRepository

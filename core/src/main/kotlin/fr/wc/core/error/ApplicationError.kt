@@ -3,7 +3,6 @@ package fr.wc.core.error
 import arrow.core.NonEmptyList
 import fr.wc.core.InvalidField
 import fr.wc.core.model.*
-import fr.wc.core.model.championship.ChampionshipId
 
 
 sealed interface ApplicationError
