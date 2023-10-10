@@ -21,4 +21,4 @@ kotest = ["kotest-api-jvm", "kotest-dataset", "kotest-junit5"]
 strikt = ["strikt-arrow", "strikt-core"]
 
 [plugins]
-ksp = { id = "com.google.devtools.ksp", version = "1.7.20-1.0.8" }
+ksp = { id = "com.google.devtools.ksp", version = "1.9.10-1.0.13" }
