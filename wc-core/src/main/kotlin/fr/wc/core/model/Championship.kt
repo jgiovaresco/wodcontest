@@ -1,16 +1,12 @@
-// Until https://github.com/arrow-kt/arrow/pull/2850 | https://github.com/arrow-kt/arrow/issues/2803 available
-@file:JvmName("ChampionshipJvm")
-
 package fr.wc.core.model
 
 import arrow.core.Either
-import arrow.core.Validated
-import arrow.core.continuations.either
-import arrow.core.invalid
-import arrow.core.valid
+import arrow.core.left
+import arrow.core.raise.either
+import arrow.core.raise.ensureNotNull
+import arrow.core.right
 import arrow.optics.optics
 import fr.wc.core.error.*
-import fr.wc.core.model.*
 import java.time.LocalDate
 
 enum class ChampionshipStatus {
@@ -87,23 +83,23 @@ fun Championship.registerScore(eventScore: EventScore) =
         list
     }
 
-fun Championship.readyToStart(): Validated<ChampionshipStartError, Championship> =
+fun Championship.readyToStart(): Either<ChampionshipStartError, Championship> =
     when {
-        info.divisions.any { (registeredAthletes.athletesFrom(it).size < 2) } -> NotEnoughAthlete.invalid()
-        registeredEvents.isEmpty() -> NoEvent.invalid()
-        else -> this.valid()
+        info.divisions.any { (registeredAthletes.athletesFrom(it).size < 2) } -> NotEnoughAthlete.left()
+        registeredEvents.isEmpty() -> NoEvent.left()
+        else -> this.right()
     }
 
-fun Championship.start(): Either<ChampionshipStartError, Championship> = either.eager {
+fun Championship.start(): Either<ChampionshipStartError, Championship> = either {
     val championship = readyToStart().bind()
     Championship.status.set(championship, ChampionshipStatus.Started)
 }
 
-fun Championship.findEvent(eventId: EventId): Either<ApplicationError, Event> =
-    Either.fromNullable(registeredEvents.find { it.id == eventId })
-        .mapLeft { EventNotFound }
+fun Championship.findEvent(eventId: EventId): Either<ApplicationError, Event> = either {
+    ensureNotNull(registeredEvents.find { it.id == eventId }) { EventNotFound }
+}
 
-fun Championship.findAthlete(athleteId: AthleteId): Either<ApplicationError, Athlete> =
-    Either.fromNullable(registeredAthletes.registrations.find { it.second.id == athleteId })
-        .mapLeft { AthleteNotFound(athleteId) }
-        .map { it.second }
+fun Championship.findAthlete(athleteId: AthleteId): Either<ApplicationError, Athlete> = either {
+    val pair = ensureNotNull(registeredAthletes.registrations.find { it.second.id == athleteId }) { AthleteNotFound(athleteId) }
+    pair.second
+}

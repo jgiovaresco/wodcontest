@@ -1,11 +1,8 @@
-// Until https://github.com/arrow-kt/arrow/pull/2850 | https://github.com/arrow-kt/arrow/issues/2803 available
-@file:JvmName("EventJvm")
-
 package fr.wc.core.model
 
-import arrow.core.Validated
-import arrow.core.invalid
-import arrow.core.valid
+import arrow.core.Either
+import arrow.core.left
+import arrow.core.right
 import arrow.optics.optics
 import fr.wc.core.error.IncorrectScoreType
 
@@ -24,8 +21,8 @@ data class Event(
     companion object
 }
 
-fun Event.accept(score: Score): Validated<IncorrectScoreType, Score> =
+fun Event.accept(score: Score): Either<IncorrectScoreType, Score> =
     when {
-        this.scoreType != score.type -> IncorrectScoreType.invalid()
-        else -> score.valid()
+        this.scoreType != score.type -> IncorrectScoreType.left()
+        else -> score.right()
     }

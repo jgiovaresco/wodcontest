@@ -1,6 +1,6 @@
 [versions]
-arrowkt = "1.1.3"
-kotest = "5.5.0"
+arrowkt = "1.2.1"
+kotest = "5.7.2"
 strikt = "0.34.1"
 
 [libraries]

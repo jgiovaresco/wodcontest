@@ -1,16 +1,13 @@
 package fr.wc.core.usecase
 
 import arrow.core.Either
-import arrow.core.Validated
-import arrow.core.continuations.either
-import arrow.core.zip
+import arrow.core.NonEmptyList
+import arrow.core.raise.either
+import fr.wc.core.InvalidDivision
 import fr.wc.core.error.ApplicationError
 import fr.wc.core.error.IncorrectInput
-import fr.wc.core.model.Championship
-import fr.wc.core.model.accept
-import fr.wc.core.model.availableIn
+import fr.wc.core.model.*
 import fr.wc.core.model.command.RegisterAthleteCommand
-import fr.wc.core.model.registerAthlete
 import fr.wc.core.repository.ChampionshipRepository
 
 class RegisterAthlete(private val championshipRepository: ChampionshipRepository) :
@@ -26,7 +23,10 @@ class RegisterAthlete(private val championshipRepository: ChampionshipRepository
     }
 }
 
-fun RegisterAthleteCommand.validate(championship: Championship): Validated<IncorrectInput, RegisterAthleteCommand> =
-    division.availableIn(championship.info.divisions)
-        .zip(division.accept(this.athlete)) { _, _ -> RegisterAthleteCommand(championshipId, athlete, division) }
+fun RegisterAthleteCommand.validate(championship: Championship): Either<IncorrectInput, RegisterAthleteCommand> =
+    either<NonEmptyList<InvalidDivision>, RegisterAthleteCommand> {
+        division.availableIn(championship.info.divisions).bind()
+        division.accept(athlete).bind<Division>()
+        RegisterAthleteCommand(championshipId, athlete, division)
+    }
         .mapLeft(::IncorrectInput)

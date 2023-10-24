@@ -1,6 +1,3 @@
-// Until https://github.com/arrow-kt/arrow/pull/2850 | https://github.com/arrow-kt/arrow/issues/2803 available
-@file:JvmName("ScoreJvm")
-
 package fr.wc.core.model
 
 import arrow.optics.Iso

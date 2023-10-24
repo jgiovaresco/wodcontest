@@ -1,10 +1,8 @@
 package fr.wc.core.usecase
 
 import arrow.core.Either
-import arrow.core.Validated
-import arrow.core.ValidatedNel
-import arrow.core.continuations.either
-import arrow.core.zip
+import arrow.core.EitherNel
+import arrow.core.raise.either
 import fr.wc.core.*
 import fr.wc.core.error.ApplicationError
 import fr.wc.core.error.IncorrectInput
@@ -30,13 +28,18 @@ class CreateChampionship(private val championshipRepository: ChampionshipReposit
     }
 }
 
-fun String.validChampionshipName(): ValidatedNel<InvalidName, String> =
+fun String.validChampionshipName(): EitherNel<InvalidName, String> =
     trim().notBlank().mapLeft(toInvalidField(::InvalidName))
 
-fun LocalDate.validChampionshipDate(): ValidatedNel<InvalidDate, LocalDate> =
+fun LocalDate.validChampionshipDate(): EitherNel<InvalidDate, LocalDate> =
     notScheduleInPast().mapLeft(toInvalidField(::InvalidDate))
 
-fun CreateChampionshipCommand.validate(): Validated<IncorrectInput, CreateChampionshipCommand> =
-    name.validChampionshipName()
-        .zip(date.validChampionshipDate()) { name, date -> CreateChampionshipCommand(name, date, this.divisions) }
+fun CreateChampionshipCommand.validate(): Either<IncorrectInput, CreateChampionshipCommand> =
+        either {
+            CreateChampionshipCommand(
+                    name.validChampionshipName().bind(),
+                    date.validChampionshipDate().bind<LocalDate>(),
+                    divisions
+            )
+        }
         .mapLeft(::IncorrectInput)

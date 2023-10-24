@@ -1,7 +1,7 @@
 package fr.wc.core.usecase
 
 import arrow.core.Either
-import arrow.core.continuations.either
+import arrow.core.raise.either
 import fr.wc.core.error.ApplicationError
 import fr.wc.core.model.OverallLeaderboard
 import fr.wc.core.model.overallLeaderboard

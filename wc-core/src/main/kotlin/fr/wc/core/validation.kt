@@ -24,8 +24,8 @@ data class InvalidDivision(override val errors: NonEmptyList<String>) : InvalidF
 fun <A : InvalidField> toInvalidField(transform: (NonEmptyList<String>) -> A): (NonEmptyList<String>) -> NonEmptyList<A> =
     { nel -> nonEmptyListOf(transform(nel)) }
 
-fun String.notBlank(): ValidatedNel<String, String> =
-    if (isNotBlank()) validNel() else "Cannot be blank".invalidNel()
+fun String.notBlank(): EitherNel<String, String> =
+        if (isNotBlank()) right() else "Cannot be blank".leftNel()
 
-fun LocalDate.notScheduleInPast(): ValidatedNel<String, LocalDate> =
-    if (isBefore(TimeProvider.today())) "Cannot be scheduled in the past".invalidNel() else validNel()
+fun LocalDate.notScheduleInPast(): EitherNel<String, LocalDate> =
+        if (isBefore(TimeProvider.today())) "Cannot be scheduled in the past".leftNel() else right()

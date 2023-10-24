@@ -1,22 +1,22 @@
 package fr.wc.core.model
 
-import arrow.core.ValidatedNel
-import arrow.core.invalidNel
+import arrow.core.EitherNel
+import arrow.core.leftNel
 import arrow.core.nonEmptyListOf
-import arrow.core.validNel
+import arrow.core.right
 import fr.wc.core.InvalidDivision
 import fr.wc.core.toInvalidField
 
 data class Division(val gender: Gender, val level: Level)
 
 
-fun Division.availableIn(divisions: List<Division>): ValidatedNel<InvalidDivision, Division> {
+fun Division.availableIn(divisions: List<Division>): EitherNel<InvalidDivision, Division> {
     val result = divisions.find { it == this }
-        ?: return InvalidDivision(nonEmptyListOf("$this is unavailable")).invalidNel()
-    return result.validNel()
+            ?: return InvalidDivision(nonEmptyListOf("$this is unavailable")).leftNel()
+    return result.right()
 }
 
-fun Division.accept(athlete: Athlete): ValidatedNel<InvalidDivision, Division> =
-    if (this.gender == athlete.gender) validNel() else "$this cannot accept ${athlete.gender}".invalidNel().mapLeft(
+fun Division.accept(athlete: Athlete): EitherNel<InvalidDivision, Division> =
+        if (this.gender == athlete.gender) right() else "$this cannot accept ${athlete.gender}".leftNel().mapLeft(
         toInvalidField(::InvalidDivision)
     )

@@ -1,7 +1,7 @@
 package fr.wc.core.usecase
 
 import arrow.core.Either
-import arrow.core.continuations.either
+import arrow.core.raise.either
 import fr.wc.core.error.ApplicationError
 import fr.wc.core.model.*
 import fr.wc.core.model.command.RegisterScoreCommand
@@ -18,7 +18,7 @@ class RegisterScore(private val championshipRepository: ChampionshipRepository) 
     }
 }
 
-fun RegisterScoreCommand.validate(championship: Championship) = either.eager {
+fun RegisterScoreCommand.validate(championship: Championship) = either {
     val event = championship.findEvent(eventId).bind()
     val athlete = championship.findAthlete(athleteId).bind()
     val score = event.accept(score).bind()

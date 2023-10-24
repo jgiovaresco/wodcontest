@@ -1,7 +1,7 @@
 package fr.wc.core.usecase
 
 import arrow.core.Tuple4
-import arrow.core.continuations.either
+import arrow.core.raise.either
 import fr.wc.core.error.ChampionshipNotFound
 import fr.wc.core.model.*
 import fr.wc.core.model.championship.ChampionshipBuilder
