@@ -9,9 +9,10 @@ import fr.wc.core.model.championship.ChampionshipBuilder.Builder.aChampionship
 import fr.wc.inmemory.repository.InMemoryChampionshipRepository
 import io.kotest.assertions.fail
 import io.kotest.core.spec.style.ShouldSpec
-import strikt.api.*
+import strikt.api.expectThat
 import strikt.arrow.isRight
-import strikt.assertions.*
+import strikt.assertions.isA
+import strikt.assertions.isEqualTo
 
 class StartChampionshipTest :
     ShouldSpec({

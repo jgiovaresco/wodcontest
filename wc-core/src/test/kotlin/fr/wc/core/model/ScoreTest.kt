@@ -1,8 +1,8 @@
 package fr.wc.core.model
 
 import io.kotest.core.spec.style.FunSpec
-import strikt.api.*
-import strikt.assertions.*
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 
 class ScoreTest :
   FunSpec({

@@ -1,2 +1,2 @@
 rootProject.name = "wodcontest"
-include("core")
+include("wc-core")

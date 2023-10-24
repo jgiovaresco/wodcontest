@@ -3,8 +3,11 @@
 
 package fr.wc.core.model
 
-import arrow.core.*
+import arrow.core.Either
+import arrow.core.Validated
 import arrow.core.continuations.either
+import arrow.core.invalid
+import arrow.core.valid
 import arrow.optics.optics
 import fr.wc.core.error.*
 import fr.wc.core.model.*
